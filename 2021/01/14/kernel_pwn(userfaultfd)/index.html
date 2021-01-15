@@ -6,15 +6,20 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="https://github.com/CodingAngela/CodingAngela.github.io.git">
-  <title>Archives | An9Ela</title>
+  <title>kernel_pwn UAF | An9Ela</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="An9Ela">
-<meta property="og:url" content="https://github.com/CodingAngela/CodingAngela.github.io.git/archives/index.html">
+  <meta name="description" content="kernel_pwn userfaultfd userfaultfd的利用姿势是在realworld ctf的议题直播里跟着BrieflyX大佬学习的，对该方法很是好奇，赛后就调了下kstack。">
+<meta name="keywords" content="CTF,KERNEL">
+<meta property="og:type" content="article">
+<meta property="og:title" content="kernel_pwn UAF">
+<meta property="og:url" content="https://github.com/CodingAngela/CodingAngela.github.io.git/2021/01/14/kernel_pwn(userfaultfd)/index.html">
 <meta property="og:site_name" content="An9Ela">
+<meta property="og:description" content="kernel_pwn userfaultfd userfaultfd的利用姿势是在realworld ctf的议题直播里跟着BrieflyX大佬学习的，对该方法很是好奇，赛后就调了下kstack。">
 <meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2021-01-15T04:13:50.913Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="An9Ela">
+<meta name="twitter:title" content="kernel_pwn UAF">
+<meta name="twitter:description" content="kernel_pwn userfaultfd userfaultfd的利用姿势是在realworld ctf的议题直播里跟着BrieflyX大佬学习的，对该方法很是好奇，赛后就调了下kstack。">
   
     <link rel="alternative" href="/atom.xml" title="An9Ela" type="application/atom+xml">
   
@@ -150,88 +155,71 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
+            <article id="yilia-kernel_pwn(userfaultfd)" class="article article-type-yilia " itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
   
+    <h1 class="article-title" itemprop="name">
+      kernel_pwn UAF
+    </h1>
   
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2021" class="archive-year">2021</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-yilia">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/01/14/kernel_pwn(userfaultfd)/" class="archive-article-date">
+
+        
+        <a href="/2021/01/14/kernel_pwn(userfaultfd)/" class="archive-article-date">
   	<time datetime="2021-01-14T10:00:20.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-01-14</time>
 </a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/01/14/kernel_pwn(userfaultfd)/">kernel_pwn UAF</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">CTF</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">KERNEL</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
+        
+      </header>
     
-    
+    <div class="article-entry" itemprop="articleBody">
       
-        </div></section>
+        <h3 id="kernel-pwn-userfaultfd"><a href="#kernel-pwn-userfaultfd" class="headerlink" title="kernel_pwn userfaultfd"></a>kernel_pwn userfaultfd</h3><blockquote>
+<p>userfaultfd的利用姿势是在realworld ctf的议题直播里跟着BrieflyX大佬学习的，对该方法很是好奇，赛后就调了下kstack。<br><a id="more"></a><br>userfaultfd是种page fault的处理方式。正常发生页缺失会引发异常，交给内核里的异常处理程序去解决，但userfaulted是让用户态的程序去处理自己的page fault。<br>userfaultfd具体的工作流程以及实现机制在<a href="http://brieflyx.me/2020/linux-tools/userfaultfd-internals/" target="_blank" rel="noopener">BrieflyX的博客</a>里讲的很清楚了，我主要记录下做kstack的过程来加深对该机制的理解。</p>
+</blockquote>
+<p>kstack题目给出了源码，实现了push和pop操作，涉及的结构为：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">Element</span> &#123;</span></span><br><span class="line">  <span class="keyword">int</span> owner;</span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">long</span> value;</span><br><span class="line">  <span class="class"><span class="keyword">struct</span> _<span class="title">Element</span> *<span class="title">fd</span>;</span></span><br><span class="line">&#125; Element;</span><br></pre></td></tr></table></figure></p>
+<p>owner标识所属进程的PID，value即存储的数据，fd指向下一个_Element结构体（以链表的方式组织）。<br>主要逻辑在proc_ioctl()函数里：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">long</span> <span class="title">proc_ioctl</span><span class="params">(struct file *filp, <span class="keyword">unsigned</span> <span class="keyword">int</span> cmd, <span class="keyword">unsigned</span> <span class="keyword">long</span> arg)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  Element *tmp, *prev;</span><br><span class="line">  <span class="keyword">int</span> pid = task_tgid_nr(current);</span><br><span class="line">  <span class="keyword">switch</span>(cmd) &#123;</span><br><span class="line">  <span class="keyword">case</span> CMD_PUSH:</span><br><span class="line">    tmp = kmalloc(<span class="keyword">sizeof</span>(Element), GFP_KERNEL);</span><br><span class="line">    tmp-&gt;owner = pid;</span><br><span class="line">    tmp-&gt;fd = head;</span><br><span class="line">    head = tmp;</span><br><span class="line">    <span class="keyword">if</span> (copy_from_user((<span class="keyword">void</span>*)&amp;tmp-&gt;value, (<span class="keyword">void</span>*)arg, <span class="keyword">sizeof</span>(<span class="keyword">unsigned</span> <span class="keyword">long</span>))) &#123;</span><br><span class="line">      head = tmp-&gt;fd;</span><br><span class="line">      kfree(tmp);</span><br><span class="line">      <span class="keyword">return</span> -EINVAL;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">break</span>;</span><br><span class="line">    </span><br><span class="line">  <span class="keyword">case</span> CMD_POP:</span><br><span class="line">    <span class="keyword">for</span>(tmp = head, prev = <span class="literal">NULL</span>; tmp != <span class="literal">NULL</span>; prev = tmp, tmp = tmp-&gt;fd) &#123;</span><br><span class="line">      <span class="keyword">if</span> (tmp-&gt;owner == pid) &#123;</span><br><span class="line">        <span class="keyword">if</span> (copy_to_user((<span class="keyword">void</span>*)arg, (<span class="keyword">void</span>*)&amp;tmp-&gt;value, <span class="keyword">sizeof</span>(<span class="keyword">unsigned</span> <span class="keyword">long</span>)))</span><br><span class="line">          <span class="keyword">return</span> -EINVAL;</span><br><span class="line">        <span class="keyword">if</span> (prev) &#123;</span><br><span class="line">          prev-&gt;fd = tmp-&gt;fd;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          head = tmp-&gt;fd;</span><br><span class="line">        &#125;</span><br><span class="line">        kfree(tmp);</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">if</span> (tmp-&gt;fd == <span class="literal">NULL</span>) <span class="keyword">return</span> -EINVAL;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">break</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>逻辑也比较简单了，push先kmalloc一个<code>sizeof(Element)</code>大小的内存，之后设置owner并通过头插法连入链表，之后调用<code>copy_from_user</code>从用户区域读入数据到value，然后把该结点删除并kfree。<br>pop的话从头部查找，找到属于该进程的结点，之后将该结点value拷贝到用户区域，然后把zhe该结点删除并kfree。<br>看起来逻辑没什么问题，但存在的一个问题是整个过程没有加锁，并且对结点的删除操作是在<code>copy_from_user()</code>和<code>copy_to_user()</code>之后的。<br>那么如果带着利用userfaultfd构造race的想法再看这个逻辑的话如果在push时执行到<code>copy_from_user()</code>，由于用户区域arg是需要userfaultfd的，则该线程就会阻塞在这里，此时交给用户态的<code>fault_handler_thread</code>线程处理。该线程是用户可控的，如果再控制该线程执行pop操作，此时就会将之前push的结点里的value拷贝到用户区域。<br>因此就要想办法使得push时kmalloc拿到的chunk对应结点value的位置存放有kernel里的地址，这里用到的一个方法时利用<code>shm_file_date</code>：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">shm_file_data</span>&#123;</span></span><br><span class="line">    <span class="keyword">int</span> id;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">ipc_namespace</span> *<span class="title">ns</span>;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">file</span> *<span class="title">file</span>;</span></span><br><span class="line">    <span class="keyword">const</span> <span class="class"><span class="keyword">struct</span> <span class="title">vm_operations_struct</span> *<span class="title">vm_ops</span>;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>该结构体总的大小和Element大小差不多，通过slab分配0x24大小的chunk存放。通过调用<code>shmget</code>建立一个共享内存对象，并<code>shmat</code>将对象映射到调用进程的地址空间，之后通过<code>shmdt</code>删除，则<code>shm_file_data</code>也会被free，之后再通过push的kmalloc时就会拿到刚刚free的chunk，同时对应vaule的位置还残留着之前<code>struct ipc_namespace *ns</code>的内容，该指针一般指向存在了的general namespace，该地址时kernel的地址，从而配合上面的pop到达leak地址的效果。</p>
+<p>这里也提一下如何创建并注册一个需要通过userfaultfd的对象：</p>
+<p>创建一个userfaultfd对象：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">uffd = syscall(__NR_userfaultfd, O_CLOEXEC | O_NONBLOCK);</span><br><span class="line"><span class="keyword">if</span>(uffd == <span class="number">-1</span>)&#123;</span><br><span class="line">    errExit(<span class="string">"userfaultfd"</span>);</span><br><span class="line">&#125;</span><br><span class="line">uffdio_api.api = UFFD_API;</span><br><span class="line">uffdio_api.features = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">if</span>(ioctl(uffd, UFFDIO_API, &amp;uffdio_api) == <span class="number">-1</span>)&#123;</span><br><span class="line">    errExit(<span class="string">"ioctl-UFFDIO_API"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>之后mmap一块内存，mmap出来的内存只有在真正使用到时才会映射到物理内存，因此对mmap出来内存的第一个r/w操作会触发page fault。<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">page_size = sysconf(_SC_PAGE_SIZE);</span><br><span class="line">len = <span class="number">4</span> * page_size;</span><br><span class="line">addr = mmap(<span class="literal">NULL</span>, len, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, <span class="number">-1</span>, <span class="number">0</span>);</span><br><span class="line"><span class="keyword">if</span>(addr == MAP_FAILED)&#123;</span><br><span class="line">    errExit(<span class="string">"mmap"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>然后将区域注册为userfaultfd处理机制:<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">uffdio_register.range.start = (<span class="keyword">unsigned</span> <span class="keyword">long</span>)addr;</span><br><span class="line">uffdio_register.range.len = len;</span><br><span class="line">uffdio_register.mode = UFFDIO_REGISTER_MODE_MISSING;</span><br><span class="line"><span class="keyword">if</span>(ioctl(uffd, UFFDIO_REGISTER, &amp;uffdio_register) == <span class="number">-1</span>)&#123;</span><br><span class="line">    errExit(<span class="string">"ioctl-UFFDIO_REGISTER"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>leak完地址后继续利用userfaultfd的机制，pop一个需要userfaultfd的内存，在执行到<code>copy_to_user()</code>时阻塞，此时在<code>fault_handler_thread</code>线程中再执行一次pop，由于删除操作还未执行，因此处理的是同一个结点，在handler线程里将该结点删除后唤醒阻塞在<code>copy_to_user()</code>的线程继续执行删除操作，就会导致一个结点被free两次造成<code>double free</code>。</p>
+<p>有了地址和<code>double free</code>接下来就是想办法提权或拿flag了。要利用<code>double free</code>的话要想办法修改chunk的前8个字节为目的地址，仅仅通过push的kmalloc是无法实现的这里用到了<code>userfaultfd + setxattr</code>的组合拳。<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">long</span></span><br><span class="line">setxattr(struct dentry *d, <span class="keyword">const</span> <span class="keyword">char</span> __user *name, <span class="keyword">const</span> <span class="keyword">void</span> __user *value,</span><br><span class="line">         <span class="keyword">size_t</span> size, <span class="keyword">int</span> flags)</span><br><span class="line">&#123;</span><br><span class="line">        <span class="keyword">int</span> error;</span><br><span class="line">        <span class="keyword">void</span> *kvalue = <span class="literal">NULL</span>;</span><br><span class="line">        <span class="keyword">void</span> *vvalue = <span class="literal">NULL</span>;    <span class="comment">/* If non-NULL, we used vmalloc() */</span></span><br><span class="line">        <span class="keyword">char</span> kname[XATTR_NAME_MAX + <span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (flags &amp; ~(XATTR_CREATE|XATTR_REPLACE))</span><br><span class="line">                <span class="keyword">return</span> -EINVAL;</span><br><span class="line"></span><br><span class="line">        error = strncpy_from_user(kname, name, <span class="keyword">sizeof</span>(kname));</span><br><span class="line">        <span class="keyword">if</span> (error == <span class="number">0</span> || error == <span class="keyword">sizeof</span>(kname))</span><br><span class="line">                error = -ERANGE;</span><br><span class="line">        <span class="keyword">if</span> (error &lt; <span class="number">0</span>)</span><br><span class="line">                <span class="keyword">return</span> error;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (size) &#123;</span><br><span class="line">                <span class="keyword">if</span> (size &gt; XATTR_SIZE_MAX)</span><br><span class="line">                        <span class="keyword">return</span> -E2BIG;</span><br><span class="line">[<span class="number">1</span>]             kvalue = kmalloc(size, GFP_KERNEL | __GFP_NOWARN);</span><br><span class="line">                <span class="keyword">if</span> (!kvalue) &#123;</span><br><span class="line">                        vvalue = vmalloc(size);</span><br><span class="line">                        <span class="keyword">if</span> (!vvalue)</span><br><span class="line">                                <span class="keyword">return</span> -ENOMEM;</span><br><span class="line">                        kvalue = vvalue;</span><br><span class="line">                &#125;</span><br><span class="line">[<span class="number">2</span>]             <span class="keyword">if</span> (copy_from_user(kvalue, value, size)) &#123;</span><br><span class="line">                        error = -EFAULT;</span><br><span class="line">                        <span class="keyword">goto</span> out;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">if</span> ((<span class="built_in">strcmp</span>(kname, XATTR_NAME_POSIX_ACL_ACCESS) == <span class="number">0</span>) ||</span><br><span class="line">                    (<span class="built_in">strcmp</span>(kname, XATTR_NAME_POSIX_ACL_DEFAULT) == <span class="number">0</span>))</span><br><span class="line">                        posix_acl_fix_xattr_from_user(kvalue, size);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        error = vfs_setxattr(d, kname, kvalue, size, flags);</span><br><span class="line">out:</span><br><span class="line">        <span class="keyword">if</span> (vvalue)</span><br><span class="line">                vfree(vvalue);</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">[<span class="number">7</span>]             kfree(kvalue);</span><br><span class="line">        <span class="keyword">return</span> error;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>setxattr源码里注意到[1]处kmalloc一个可控size的chunk，之后将value内容的size长度拷贝到kmalloc申请的chunk里，如果value处于两个页的交汇处，即value的内容在一个正常的页面的末尾，而在size-value_size的部分在下一个页面，而该页面会触发page fault且被注册为userfaultfd，则会导致在执行[2]copy_from_user()时，处于正常页面的value_size的内容会被正常拷贝，而之后到下一个页面时会触发userfaulted交给handler_thread处理。<br>这里BrieflyX拿flag的方法是将<code>modprobe_path - 8</code>的地址放在一个页的最后8个字节位置上，下一个页注册为userfaulted，之后通过setxattr()修改double free的chunk头八个字节为<code>modprobe_path - 8</code>的地址，之后在handler_thread线程里利用两次push取出<code>modprobe_path - 8</code>的内存，并修改<code>modprobe_path</code>为<code>/tmp/x</code>，x文件内容提前被设置<code>system(&quot;echo -ne &#39;#!/bin/sh\n/bin/chmod 777 /flag&#39; &gt; /tmp/x &quot;);system(&quot;chmod +x /tmp/x&quot;);</code>，modprobe_path其实就是一个文件路径的字符串，该文件在系统试图执行一个无法执行（除elf和shell脚本#!）的程序后执行，因此提前设置一个无法识别执行的脚本<code>system(&quot;echo -ne &#39;\\xff\\xff\\xff\\xff&#39; &gt; /tmp/dummy&quot;);system(&quot;chmod +x /tmp/dummy&quot;);</code>。<br>此时执行dummy文件，系统会报错，接着便会执行modprobe_path的x文件，从而修改flag权限为777，之后<code>system(&quot;cat /flag&quot;)</code>拿到flag。</p>
+<p>userfaultfd就像是在copy_to/from_user()处下了断电，形成一个稳定的race窗口，具有较强的通用型，这里的重点在于handler_thread的构造，如何区分不同的情况并进行相应配合的操作。我也是看的BrieflyX大佬的<a href="https://github.com/BrieflyX/ctf-pwns/blob/master/kernel/kstack/exp.c">exp</a>学习的。</p>
+<p>参考：<br><a href="http://brieflyx.me/2020/linux-tools/userfaultfd-internals/" target="_blank" rel="noopener">http://brieflyx.me/2020/linux-tools/userfaultfd-internals/</a><br><a href="https://www.bilibili.com/video/BV1qi4y1F7F1" target="_blank" rel="noopener">https://www.bilibili.com/video/BV1qi4y1F7F1</a></p>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
       
       
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2020" class="archive-year">2020</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-yilia">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/11/20/kernel_pwn 从任意地址独写到提权(1)/" class="archive-article-date">
-  	<time datetime="2020-11-20T12:40:20.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-20</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/11/20/kernel_pwn 从任意地址独写到提权(1)/">kernel_pwn SringsIPC(P1)</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
@@ -247,358 +235,105 @@
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=https://github.com/CodingAngela/CodingAngela.github.io.git/2021/01/14/kernel_pwn(userfaultfd)/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-yilia">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/11/09/kernel_pwn(3)/" class="archive-article-date">
-  	<time datetime="2020-11-09T10:00:20.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-09</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/2020/11/20/kernel_pwn 从任意地址独写到提权(1)/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">kernel_pwn SringsIPC(P1)</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
+        
+        
+    </div>
+</aside>
+
+
+
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/11/09/kernel_pwn(3)/">kernel_pwn UAF</a>
-    </h1>
+  
   
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">CTF</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">KERNEL</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-yilia">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/11/08/kernel_pwn(2)/" class="archive-article-date">
-  	<time datetime="2020-11-08T08:53:20.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-08</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/11/08/kernel_pwn(2)/">kernel_pwn Double_fetch</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">CTF</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">KERNEL</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-yilia">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/11/07/kernel_pwn(1)/" class="archive-article-date">
-  	<time datetime="2020-11-07T14:00:20.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-07</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/11/07/kernel_pwn(1)/">kernel_pwn ROP</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">CTF</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">KERNEL</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-yilia">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/11/04/Xnuca2020线上赛/" class="archive-article-date">
-  	<time datetime="2020-11-04T13:53:20.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-04</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/11/04/Xnuca2020线上赛/">Xnuca2020线上赛l</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">CTF</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">PWN</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-yilia">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/10/28/N1CTF2020/" class="archive-article-date">
-  	<time datetime="2020-10-27T16:00:03.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-10-28</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/10/28/N1CTF2020/">N1CTF2020</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">CTF</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">PWN</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-yilia">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/10/26/ByteCTF2020初赛/" class="archive-article-date">
-  	<time datetime="2020-10-26T13:13:12.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-10-26</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/10/26/ByteCTF2020初赛/">ByteCTF初赛</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">CTF</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">PWN</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-yilia">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/10/20/Pwnable_babystack/" class="archive-article-date">
-  	<time datetime="2020-10-20T15:53:20.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-10-20</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/10/20/Pwnable_babystack/">Pwnable.tw babystack</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">CTF</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">PWN</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-yilia">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/10/19/Pwnable_re-alloc/" class="archive-article-date">
-  	<time datetime="2020-10-19T12:53:20.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-10-19</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/10/19/Pwnable_re-alloc/">Pwnable.tw re-alloc</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">CTF</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">PWN</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
-  
-
-    
-    <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/archives/page/2/">2</a><a class="page-number" href="/archives/page/3/">3</a><a class="extend next" rel="next" href="/archives/page/2/">Next &raquo;</a>
-    </nav>
   
 
 
@@ -622,8 +357,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
