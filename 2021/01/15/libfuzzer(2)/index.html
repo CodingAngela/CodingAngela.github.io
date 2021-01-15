@@ -8,13 +8,17 @@
   <link rel="dns-prefetch" href="https://github.com/CodingAngela/CodingAngela.github.io.git">
   <title>An9Ela</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
+  <meta name="description" content="LibFuzzer workshop学习之路（二） 上一篇对libfuzzer的原理和使用有了基本的了解，接下来就到进阶的内容了，会涉及到字典的使用，语料库精简，错误报告生成以及一些关键的编译选项的选择等内容，希望能对libfuzzer有更深入的学习。  lesson 08(dictionaries are so effective)对libxml2进行fuzz。首先对其解压并用clang编译之。">
+<meta property="og:type" content="article">
 <meta property="og:title" content="An9Ela">
-<meta property="og:url" content="https://github.com/CodingAngela/CodingAngela.github.io.git/index.html">
+<meta property="og:url" content="https://github.com/CodingAngela/CodingAngela.github.io.git/2021/01/15/libfuzzer(2)/index.html">
 <meta property="og:site_name" content="An9Ela">
+<meta property="og:description" content="LibFuzzer workshop学习之路（二） 上一篇对libfuzzer的原理和使用有了基本的了解，接下来就到进阶的内容了，会涉及到字典的使用，语料库精简，错误报告生成以及一些关键的编译选项的选择等内容，希望能对libfuzzer有更深入的学习。  lesson 08(dictionaries are so effective)对libxml2进行fuzz。首先对其解压并用clang编译之。">
 <meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2020-12-17T16:50:55.440Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="An9Ela">
+<meta name="twitter:description" content="LibFuzzer workshop学习之路（二） 上一篇对libfuzzer的原理和使用有了基本的了解，接下来就到进阶的内容了，会涉及到字典的使用，语料库精简，错误报告生成以及一些关键的编译选项的选择等内容，希望能对libfuzzer有更深入的学习。  lesson 08(dictionaries are so effective)对libxml2进行fuzz。首先对其解压并用clang编译之。">
   
     <link rel="alternative" href="/atom.xml" title="An9Ela" type="application/atom+xml">
   
@@ -150,9 +154,7 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-    <article id="post-libfuzzer(2)" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+            <article id="post-libfuzzer(2)" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
     <div class="article-entry" itemprop="articleBody">
@@ -194,6 +196,27 @@
       
 
       
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
     </div>
     <div class="article-info article-info-index">
       
@@ -201,16 +224,75 @@
       
 
       
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/01/15/libfuzzer(2)/">展开全文 >></a>
-        </p>
-      
 
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=https://github.com/CodingAngela/CodingAngela.github.io.git/2021/01/15/libfuzzer(2)/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
       
       <div class="clearfix"></div>
     </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
+  
+  
+    <a href="/2021/01/14/kernel_pwn(userfaultfd)/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">kernel_pwn userfaultfd</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
 
 <aside class="wrap-side-operation">
     <div class="mod-side-operation">
@@ -230,727 +312,14 @@
 
 
 
-
-  
-    <article id="yilia-kernel_pwn(userfaultfd)" class="article article-type-yilia  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/01/14/kernel_pwn(userfaultfd)/">kernel_pwn userfaultfd</a>
-    </h1>
-  
-
-        
-        <a href="/2021/01/14/kernel_pwn(userfaultfd)/" class="archive-article-date">
-  	<time datetime="2021-01-14T10:00:20.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-01-14</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="kernel-pwn-userfaultfd"><a href="#kernel-pwn-userfaultfd" class="headerlink" title="kernel_pwn userfaultfd"></a>kernel_pwn userfaultfd</h3><blockquote>
-<p>userfaultfd的利用姿势是在realworld ctf的议题直播里跟着BrieflyX大佬学习的，对该方法很是好奇，赛后就调了下kstack。<br></p></blockquote>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">CTF</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">KERNEL</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/01/14/kernel_pwn(userfaultfd)/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="yilia-kernel_pwn 从任意地址独写到提权(1)" class="article article-type-yilia  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/11/20/kernel_pwn 从任意地址独写到提权(1)/">kernel_pwn SringsIPC(P1)</a>
-    </h1>
-  
-
-        
-        <a href="/2020/11/20/kernel_pwn 从任意地址独写到提权(1)/" class="archive-article-date">
-  	<time datetime="2020-11-20T12:40:20.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-20</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="Kernel-pwn-SringsIPC-P1"><a href="#Kernel-pwn-SringsIPC-P1" class="headerlink" title="Kernel_pwn SringsIPC(P1)"></a>Kernel_pwn SringsIPC(P1)</h3><blockquote>
-<p>从任意地址读写到提权的三种方法：<br>1.修改cred结构体<br>2.改写vdso映射函数+反弹shell<br>3.劫持prctl执行过程的hp-&gt;hook指针</p>
-</blockquote>
-<p>这道题来自csaw-2015-ctf也是一道经典的内核题了，花了蛮久的时间去复现🤦<br></p>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">CTF</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">KERNEL</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/11/20/kernel_pwn 从任意地址独写到提权(1)/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="yilia-kernel_pwn(3)" class="article article-type-yilia  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/11/09/kernel_pwn(3)/">kernel_pwn UAF</a>
-    </h1>
-  
-
-        
-        <a href="/2020/11/09/kernel_pwn(3)/" class="archive-article-date">
-  	<time datetime="2020-11-09T10:00:20.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-09</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="kernel-pwn-UAF"><a href="#kernel-pwn-UAF" class="headerlink" title="kernel_pwn UAF"></a>kernel_pwn UAF</h3><blockquote>
-<p>内核的UAF和用户态的差不多，不同的是内核使用的是slab/slub分配器来管理堆块。<br>题目来源：ciscn2017_babydriver<br></p></blockquote>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">CTF</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">KERNEL</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/11/09/kernel_pwn(3)/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="yilia-kernel_pwn(2)" class="article article-type-yilia  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/11/08/kernel_pwn(2)/">kernel_pwn Double_fetch</a>
-    </h1>
-  
-
-        
-        <a href="/2020/11/08/kernel_pwn(2)/" class="archive-article-date">
-  	<time datetime="2020-11-08T08:53:20.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-08</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="kernel-pwn-Double-fetch"><a href="#kernel-pwn-Double-fetch" class="headerlink" title="kernel_pwn Double_fetch"></a>kernel_pwn Double_fetch</h3><blockquote>
-<p>wiki上kernel部分的第三道题目，来自0ctf2018 final_baby<br></p></blockquote>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">CTF</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">KERNEL</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/11/08/kernel_pwn(2)/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="yilia-kernel_pwn(1)" class="article article-type-yilia  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/11/07/kernel_pwn(1)/">kernel_pwn ROP</a>
-    </h1>
-  
-
-        
-        <a href="/2020/11/07/kernel_pwn(1)/" class="archive-article-date">
-  	<time datetime="2020-11-07T14:00:20.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-07</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="kernel"><a href="#kernel" class="headerlink" title="kernel"></a>kernel</h3><blockquote>
-<p>通常一个内核由负责响应中断的中断服务程序，负责管理多个进程从而分享处理器时间的调度程序，负责管理进程地址空间的内存管理程序，进程间通讯等系统服务程序共同组成。  –linux内核设计与实现</p>
-</blockquote>
-<p>一直想学kernel pwn，但迟迟没有开始（懒🤦）。最近又心血来潮，翻开了<code>linux内核设计与实现</code>这本书，准备看这本来入门kernel。这将会是一个系列，记录下自己的学习过程（读书笔记+kernel_pwn题目复现），希望自己可以坚持下去🎃。<br></p>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">CTF</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">KERNEL</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/11/07/kernel_pwn(1)/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="yilia-Xnuca2020线上赛" class="article article-type-yilia  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/11/04/Xnuca2020线上赛/">Xnuca2020线上赛l</a>
-    </h1>
-  
-
-        
-        <a href="/2020/11/04/Xnuca2020线上赛/" class="archive-article-date">
-  	<time datetime="2020-11-04T13:53:20.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-04</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="Xnuca2020线上赛"><a href="#Xnuca2020线上赛" class="headerlink" title="Xnuca2020线上赛"></a>Xnuca2020线上赛</h3><blockquote>
-<p>比赛时pwn题都是ruan解的tttttql😍，我TM直接化身ruan师傅迷弟。不亏是中科院，收获满满。<br></p></blockquote>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">CTF</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">PWN</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/11/04/Xnuca2020线上赛/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="yilia-N1CTF2020" class="article article-type-yilia  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/10/28/N1CTF2020/">N1CTF2020</a>
-    </h1>
-  
-
-        
-        <a href="/2020/10/28/N1CTF2020/" class="archive-article-date">
-  	<time datetime="2020-10-27T16:00:03.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-10-28</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="N1CTF-Pwn-amp-Re部分"><a href="#N1CTF-Pwn-amp-Re部分" class="headerlink" title="N1CTF Pwn&amp;Re部分"></a>N1CTF Pwn&amp;Re部分</h3><blockquote>
-<p>拖了好久的wp，差点咕咕咕了⏰<br></p></blockquote>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">CTF</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">PWN</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/10/28/N1CTF2020/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="yilia-ByteCTF2020初赛" class="article article-type-yilia  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/10/26/ByteCTF2020初赛/">ByteCTF初赛</a>
-    </h1>
-  
-
-        
-        <a href="/2020/10/26/ByteCTF2020初赛/" class="archive-article-date">
-  	<time datetime="2020-10-26T13:13:12.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-10-26</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="ByteCTF2020-部分pwn-amp-re"><a href="#ByteCTF2020-部分pwn-amp-re" class="headerlink" title="ByteCTF2020 部分pwn&amp;re"></a>ByteCTF2020 部分pwn&amp;re</h3><blockquote>
-<p>比赛打了两天，挺激烈的，尤其最后时刻大家都疯狂冲分，最后没能守住掉到23了🤦<br></p></blockquote>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">CTF</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">PWN</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/10/26/ByteCTF2020初赛/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="yilia-Pwnable_babystack" class="article article-type-yilia  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/10/20/Pwnable_babystack/">Pwnable.tw babystack</a>
-    </h1>
-  
-
-        
-        <a href="/2020/10/20/Pwnable_babystack/" class="archive-article-date">
-  	<time datetime="2020-10-20T15:53:20.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-10-20</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="Pwnable-tw-babystack"><a href="#Pwnable-tw-babystack" class="headerlink" title="Pwnable.tw babystack"></a>Pwnable.tw babystack</h3><blockquote>
-<p>远程搞我心态🤬，收发改了半天，但漏洞点还是挺细节的。<br></p></blockquote>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">CTF</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">PWN</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/10/20/Pwnable_babystack/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
   
   
-    <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
-    </nav>
+  
+
+  
+
+  
+
   
 
 
@@ -973,8 +342,8 @@
     <script>
 	var yiliaConfig = {
 		mathjax: false,
-		isHome: true,
-		isPost: false,
+		isHome: false,
+		isPost: true,
 		isArchive: false,
 		isTag: false,
 		isCategory: false,
