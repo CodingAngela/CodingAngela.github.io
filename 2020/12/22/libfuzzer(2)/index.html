@@ -8,18 +8,18 @@
   <link rel="dns-prefetch" href="https://github.com/CodingAngela/CodingAngela.github.io.git">
   <title>（转）LibFuzzer workshop学习之路（二） | An9Ela</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="文章首发于安全客 ，本文由安全客原创发布转载，请参考转载声明，注明出处： https://www.anquanke.com/post/id/225957安全客 – 有思想的安全新媒体  LibFuzzer workshop学习之路（二） 上一篇对libfuzzer的原理和使用有了基本的了解，接下来就到进阶的内容了，会涉及到字典的使用，语料库精简，错误报告生成以及一些关键的编译选项的选择等内容，希">
+  <meta name="description" content="文章首发于安全客，由安全客原创发布： https://www.anquanke.com/post/id/225957 LibFuzzer workshop学习之路（二） 上一篇对libfuzzer的原理和使用有了基本的了解，接下来就到进阶的内容了，会涉及到字典的使用，语料库精简，错误报告生成以及一些关键的编译选项的选择等内容，希望能对libfuzzer有更深入的学习。">
 <meta name="keywords" content="FUZZ">
 <meta property="og:type" content="article">
 <meta property="og:title" content="（转）LibFuzzer workshop学习之路（二）">
 <meta property="og:url" content="https://github.com/CodingAngela/CodingAngela.github.io.git/2020/12/22/libfuzzer(2)/index.html">
 <meta property="og:site_name" content="An9Ela">
-<meta property="og:description" content="文章首发于安全客 ，本文由安全客原创发布转载，请参考转载声明，注明出处： https://www.anquanke.com/post/id/225957安全客 – 有思想的安全新媒体  LibFuzzer workshop学习之路（二） 上一篇对libfuzzer的原理和使用有了基本的了解，接下来就到进阶的内容了，会涉及到字典的使用，语料库精简，错误报告生成以及一些关键的编译选项的选择等内容，希">
+<meta property="og:description" content="文章首发于安全客，由安全客原创发布： https://www.anquanke.com/post/id/225957 LibFuzzer workshop学习之路（二） 上一篇对libfuzzer的原理和使用有了基本的了解，接下来就到进阶的内容了，会涉及到字典的使用，语料库精简，错误报告生成以及一些关键的编译选项的选择等内容，希望能对libfuzzer有更深入的学习。">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2021-01-15T04:43:40.019Z">
+<meta property="og:updated_time" content="2021-06-09T08:08:12.545Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="（转）LibFuzzer workshop学习之路（二）">
-<meta name="twitter:description" content="文章首发于安全客 ，本文由安全客原创发布转载，请参考转载声明，注明出处： https://www.anquanke.com/post/id/225957安全客 – 有思想的安全新媒体  LibFuzzer workshop学习之路（二） 上一篇对libfuzzer的原理和使用有了基本的了解，接下来就到进阶的内容了，会涉及到字典的使用，语料库精简，错误报告生成以及一些关键的编译选项的选择等内容，希">
+<meta name="twitter:description" content="文章首发于安全客，由安全客原创发布： https://www.anquanke.com/post/id/225957 LibFuzzer workshop学习之路（二） 上一篇对libfuzzer的原理和使用有了基本的了解，接下来就到进阶的内容了，会涉及到字典的使用，语料库精简，错误报告生成以及一些关键的编译选项的选择等内容，希望能对libfuzzer有更深入的学习。">
   
     <link rel="alternative" href="/atom.xml" title="An9Ela" type="application/atom+xml">
   
@@ -176,9 +176,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <blockquote>
-<p>文章首发于安全客 ，本文由安全客原创发布<br>转载，请参考转载声明，注明出处： <a href="https://www.anquanke.com/post/id/225957" target="_blank" rel="noopener">https://www.anquanke.com/post/id/225957</a><br>安全客 – 有思想的安全新媒体</p>
-</blockquote>
+        <p>文章首发于安全客，由安全客原创发布： <a href="https://www.anquanke.com/post/id/225957" target="_blank" rel="noopener">https://www.anquanke.com/post/id/225957</a></p>
 <h3 id="LibFuzzer-workshop学习之路（二）"><a href="#LibFuzzer-workshop学习之路（二）" class="headerlink" title="LibFuzzer workshop学习之路（二）"></a>LibFuzzer workshop学习之路（二）</h3><blockquote>
 <p>上一篇对libfuzzer的原理和使用有了基本的了解，接下来就到进阶的内容了，会涉及到字典的使用，语料库精简，错误报告生成以及一些关键的编译选项的选择等内容，希望能对libfuzzer有更深入的学习。<br><a id="more"></a></p>
 </blockquote>
@@ -481,11 +479,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">ARM_PWN</a>
+                <a href="javascript:void(0)" class="js-tag color2">python</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">python</a>
+                <a href="javascript:void(0)" class="js-tag color3">ARM_PWN</a>
               </li>
             
             <div class="clearfix"></div>

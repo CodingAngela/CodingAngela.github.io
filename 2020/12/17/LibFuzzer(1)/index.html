@@ -8,18 +8,18 @@
   <link rel="dns-prefetch" href="https://github.com/CodingAngela/CodingAngela.github.io.git">
   <title>（转）LibFuzzer workshop学习之路（一） | An9Ela</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="文章首发于安全客 ，本文由安全客原创发布转载，请参考转载声明，注明出处： https://www.anquanke.com/post/id/224823安全客 – 有思想的安全新媒体  LibFuzzer workshop学习之路（一） 最近做项目开始上手学习libfuzzer，是跟着libfuzzer-workshop学的。写下自己的心得和收获。">
+  <meta name="description" content="文章首发于安全客，由安全客原创发布：https://www.anquanke.com/post/id/224823 LibFuzzer workshop学习之路（一） 最近做项目开始上手学习libfuzzer，是跟着libfuzzer-workshop学的。写下自己的心得和收获。">
 <meta name="keywords" content="FUZZ">
 <meta property="og:type" content="article">
 <meta property="og:title" content="（转）LibFuzzer workshop学习之路（一）">
 <meta property="og:url" content="https://github.com/CodingAngela/CodingAngela.github.io.git/2020/12/17/LibFuzzer(1)/index.html">
 <meta property="og:site_name" content="An9Ela">
-<meta property="og:description" content="文章首发于安全客 ，本文由安全客原创发布转载，请参考转载声明，注明出处： https://www.anquanke.com/post/id/224823安全客 – 有思想的安全新媒体  LibFuzzer workshop学习之路（一） 最近做项目开始上手学习libfuzzer，是跟着libfuzzer-workshop学的。写下自己的心得和收获。">
+<meta property="og:description" content="文章首发于安全客，由安全客原创发布：https://www.anquanke.com/post/id/224823 LibFuzzer workshop学习之路（一） 最近做项目开始上手学习libfuzzer，是跟着libfuzzer-workshop学的。写下自己的心得和收获。">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2021-01-15T04:54:26.280Z">
+<meta property="og:updated_time" content="2021-06-09T08:07:38.559Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="（转）LibFuzzer workshop学习之路（一）">
-<meta name="twitter:description" content="文章首发于安全客 ，本文由安全客原创发布转载，请参考转载声明，注明出处： https://www.anquanke.com/post/id/224823安全客 – 有思想的安全新媒体  LibFuzzer workshop学习之路（一） 最近做项目开始上手学习libfuzzer，是跟着libfuzzer-workshop学的。写下自己的心得和收获。">
+<meta name="twitter:description" content="文章首发于安全客，由安全客原创发布：https://www.anquanke.com/post/id/224823 LibFuzzer workshop学习之路（一） 最近做项目开始上手学习libfuzzer，是跟着libfuzzer-workshop学的。写下自己的心得和收获。">
   
     <link rel="alternative" href="/atom.xml" title="An9Ela" type="application/atom+xml">
   
@@ -176,9 +176,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <blockquote>
-<p>文章首发于安全客 ，本文由安全客原创发布<br>转载，请参考转载声明，注明出处： <a href="https://www.anquanke.com/post/id/224823" target="_blank" rel="noopener">https://www.anquanke.com/post/id/224823</a><br>安全客 – 有思想的安全新媒体</p>
-</blockquote>
+        <p>文章首发于安全客，由安全客原创发布：<a href="https://www.anquanke.com/post/id/224823" target="_blank" rel="noopener">https://www.anquanke.com/post/id/224823</a></p>
 <h3 id="LibFuzzer-workshop学习之路（一）"><a href="#LibFuzzer-workshop学习之路（一）" class="headerlink" title="LibFuzzer workshop学习之路（一）"></a>LibFuzzer workshop学习之路（一）</h3><blockquote>
 <p>最近做项目开始上手学习libfuzzer，是跟着libfuzzer-workshop学的。写下自己的心得和收获。<br><a id="more"></a><br>官方给出的定义<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">LibFuzzer is in-process, coverage-guided, evolutionary fuzzing engine.</span><br><span class="line">LibFuzzer is linked with the library under test, and feeds fuzzed inputs to the library via a specific fuzzing entrypoint (aka “target function”); the fuzzer then tracks which areas of the code are reached, and generates mutations on the corpus of input data in order to maximize the code coverage. The code coverage information for libFuzzer is provided by LLVM’s SanitizerCoverage instrumentation.</span><br></pre></td></tr></table></figure></p>
 </blockquote>
@@ -503,11 +501,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">ARM_PWN</a>
+                <a href="javascript:void(0)" class="js-tag color2">python</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">python</a>
+                <a href="javascript:void(0)" class="js-tag color3">ARM_PWN</a>
               </li>
             
             <div class="clearfix"></div>
