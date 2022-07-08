@@ -4,25 +4,6 @@
   
     
     <entry>
-      <title>I am back</title>
-      <link href="/2022/02/21/iamback/"/>
-      <url>/2022/02/21/iamback/</url>
-      
-        <content type="html"><![CDATA[<p>考研结束有一段时间了，也休息调整的差不多了，是时候重启更新计划了🛡</p>]]></content>
-      
-      
-      
-        <tags>
-            
-            <tag> life </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
       <title>Kernel_pwn FG_KASLR in ROP</title>
       <link href="/2021/02/10/kernel_pwn(fg_kaslr)/"/>
       <url>/2021/02/10/kernel_pwn(fg_kaslr)/</url>
