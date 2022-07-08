@@ -1,107 +1,66 @@
-<!doctype html>
-<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><title>python en(de)code - An9Ela</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="An9Ela"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="An9Ela"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="先上代码python爬虫 代码写挺长的，也是边学边写，但一直搞不清楚python的encode(编码)和decode(解码)。以下是我的探究之路。"><meta property="og:type" content="article"><meta property="og:title" content="python en(de)code"><meta property="og:url" content="https://github.com/CodingAngela/CodingAngela.github.io.git/2019/04/06/python-en-de-code/"><meta property="og:site_name" content="An9Ela"><meta property="og:description" content="先上代码python爬虫 代码写挺长的，也是边学边写，但一直搞不清楚python的encode(编码)和decode(解码)。以下是我的探究之路。"><meta property="og:image" content="https://github.com/img/og_image.png"><meta property="article:published_time" content="2019-04-06T12:26:36.000Z"><meta property="article:modified_time" content="2020-07-01T09:29:10.000Z"><meta property="article:author" content="An9Ela"><meta property="article:tag" content="python"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="/img/og_image.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://github.com/CodingAngela/CodingAngela.github.io.git/2019/04/06/python-en-de-code/"},"headline":"An9Ela","image":["https://github.com/img/og_image.png"],"datePublished":"2019-04-06T12:26:36.000Z","dateModified":"2020-07-01T09:29:10.000Z","author":{"@type":"Person","name":"An9Ela"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject"}},"description":"先上代码python爬虫 代码写挺长的，也是边学边写，但一直搞不清楚python的encode(编码)和decode(解码)。以下是我的探究之路。"}</script><link rel="canonical" href="https://github.com/CodingAngela/CodingAngela.github.io.git/2019/04/06/python-en-de-code/"><meta name="referrer" content="no-referrer-when-downgrade"><link rel="stylesheet" href="https://cdnjs.loli.net/ajax/libs/font-awesome/5.15.2/css/all.min.css"><link rel="stylesheet" href="https://cdnjs.loli.net/ajax/libs/highlight.js/9.12.0/styles/atom-one-light.min.css"><link rel="stylesheet" href="https://fonts.loli.net/css2?family=Oxanium:wght@300;400;600&amp;family=Roboto+Mono"><link rel="stylesheet" href="/css/cyberpunk.css"><link rel="stylesheet" href="https://cdnjs.loli.net/ajax/libs/font-awesome/5.12.0/css/all.min.css"><link rel="stylesheet" href="https://fonts.loli.net/css?family=Ubuntu:400,600|Source+Code+Pro|Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Microsoft YaHei:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&amp;amp;subset=latin,latin-ext|Inconsolata|Itim|Lobster.css"><script src="https://cdnjs.loli.net/ajax/libs/jquery/3.3.1/jquery.min.js"></script><script src="/js/globalUtils.js"></script><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" defer></script><!--!--><link rel="stylesheet" href="https://cdnjs.loli.net/ajax/libs/lightgallery/1.10.0/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdnjs.loli.net/ajax/libs/justifiedGallery/3.8.1/css/justifiedGallery.min.css"><!--!--><!--!--><style>.pace{-webkit-pointer-events:none;pointer-events:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}.pace-inactive{display:none}.pace .pace-progress{background:#3273dc;position:fixed;z-index:2000;top:0;right:100%;width:100%;height:2px}</style><script src="https://cdnjs.loli.net/ajax/libs/pace/1.2.4/pace.min.js"></script><link rel="stylesheet" href="/live2d/waifu.css"><script type="text/javascript" async src="/live2d/autoload.js"></script><meta name="generator" content="Hexo 6.2.0"></head><body class="is-3-column has-navbar-fixed-top"><nav class="navbar navbar-main is-fixed-top"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/me.jpg" alt="An9Ela" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/LittleYe233/hexo-theme-amazingremake"><i class="fab fa-github"></i></a><a class="navbar-item search" title="Search" href="javascript:;"><i class="fas fa-search"></i></a><a class="navbar-item" id="night-nav" title="Night Mode" href="javascript:;"><i class="fas fa-moon" id="night-icon"></i></a></div></div></div></nav><script type="text/javascript" src="/js/theme-setting.js"></script><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-9-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta size-small is-uppercase level is-mobile"><div class="level-left"><i class="far fa-calendar-plus"> </i>2019-04-06  <span class="level-item"><i class="far fa-clock"> </i>4 m  <i class="fas fa-pencil-alt"> </i>0.6 k</span><span class="level-item" id="busuanzi_container_page_pv"><span id="busuanzi_value_page_pv">0</span>&nbsp;visites</span></div></div><h1 class="title is-3 is-size-4-mobile">python en(de)code</h1><div class="content"><h1 id="先上代码"><a href="#先上代码" class="headerlink" title="先上代码"></a><strong>先上代码</strong></h1><p><a href="https://github.com/CodingAngela/Angela/blob/master/spider%EF%BC%88www.dytt8.net">python爬虫</a></p>
-<p>代码写挺长的，也是边学边写，但一直搞不清楚python的encode(编码)和decode(解码)。以下是我的探究之路。</p>
-<span id="more"></span>
+extends widget/base
+block append head
+  link(rel='stylesheet', href= url_for('/style/post.css'))
+  link(rel='stylesheet', href= url_for('/style/themes/highlight-theme-light.css'))
+  script(src= url_for("/js/highlight.pack.js"))
+  meta(name="description", content=truncate( strip_html(page.content), {length: 360, omission: '..'} ))
+  if theme.comment_valine && theme.comment_valine.enable
+      script(src="//unpkg.com/valine/dist/Valine.min.js")
+block topic
+    div#postTopic.is-full-height
+        - var title = truncate( page.title, {length: 65, omission: '..'} ) || ''
+        p.is-full-height.is-flex-shrink-0.is-flex.is-align-items-center.is-justify-content-center= title
+        p.is-full-height.is-flex-shrink-0.is-flex.is-align-items-center.is-justify-content-center= __('click_back_to_the_top')
 
-<h2 id="一、当然先看官方文档"><a href="#一、当然先看官方文档" class="headerlink" title="一、当然先看官方文档"></a>一、当然先看官方文档</h2><p><a target="_blank" rel="noopener" href="https://docs.python.org/3/library/stdtypes.html?highlight=encode#string-methods">地址如下</a></p>
-<p>里面提到encode函数‘Return an encoded version of the string as a bytes object.’就是将字符串进行编码，返回得到bytes类型对象，</p>
-<p>而decode函数正好相反，是将bytes解码为字符串类型。</p>
-<h2 id="二、实际操作一下"><a href="#二、实际操作一下" class="headerlink" title="二、实际操作一下"></a>二、实际操作一下</h2><p>直接以爬虫代码为例：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">response=requests.get(BASE_DOMAIN, headers=HEADERS)</span><br><span class="line"><span class="built_in">print</span>(response.text)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>run一下之后会发现很多乱码![](C:\Users\admin\Pictures\Camera Roll\11.PNG)</p>
-<p>查了一下发现问题处在.text上，.text是返回网页的相应数据，并按照机器认为的最大可能去解码比如utf-8。而观察本站发现’charset&#x3D;gb2312’所以出现了乱码。于是，</p>
-<p>我用encoding规定用gb2312解码：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">response=requests.get(BASE_DOMAIN, headers=HEADERS)</span><br><span class="line"><span class="comment"># print(response.text)</span></span><br><span class="line">response.encoding=<span class="string">&quot;gb2312&quot;</span></span><br><span class="line"><span class="built_in">print</span>(response.text)</span><br></pre></td></tr></table></figure>
-
-<p>果然解决了乱码问题，但这和encode,decode没啥关系。。。</p>
-<p>接下来就有关系了。</p>
-<p>我换了一种方式：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">response=requests.get(BASE_DOMAIN, headers=HEADERS)</span><br><span class="line"><span class="built_in">print</span>(response.content)</span><br></pre></td></tr></table></figure>
-
-<p>发现爬到的是bytes类型，意识到.content返回的数据是不进行解码的，又由于是由bytes到字符串的解码，所以使用decode()</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">response=requests.get(BASE_DOMAIN, headers=HEADERS)</span><br><span class="line"><span class="built_in">print</span>(response.content.decode(<span class="string">&#x27;gb2312&#x27;</span>))</span><br></pre></td></tr></table></figure>
-
-<p>一运行，woc！报错了![](C:\Users\admin\Pictures\Camera Roll\12.PNG)</p>
-<p>说是gb2312不能解码，这不矛盾吗…</p>
-<p>于是赶紧上网查了一下发现gbk的解码范围包含了gb2312，于是尝试改为gbk，问题解决，成功解码~</p>
-<p>这只是用了decode()，那再作死一下把解码的再编码回来，走你：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">response=requests.get(BASE_DOMAIN, headers=HEADERS)</span><br><span class="line">r=response.content.decode(<span class="string">&#x27;gbk&#x27;</span>)</span><br><span class="line"><span class="built_in">print</span>(r.encode(<span class="string">&#x27;gbk&#x27;</span>))</span><br></pre></td></tr></table></figure>
-
-<p>成功编码~![](C:\Users\admin\Pictures\Camera Roll\13.PNG)</p>
-<p>经过了这次的探索尝试，搞明白了Python编码和解码，最近在学习汇编，相信之后从硬件的角度会对编码解码这方面有更深的理解!</p>
-</div><div class="article-licensing box"><div class="licensing-title"><p>python en(de)code</p><p><a href="https://github.com/CodingAngela/CodingAngela.github.io.git/2019/04/06/python-en-de-code/">https://github.com/CodingAngela/CodingAngela.github.io.git/2019/04/06/python-en-de-code/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>Author</h6><a href="https://github.com/CodingAngela/CodingAngela.github.io.git"><p>An9Ela</p></a></div></div><div class="level-item is-narrow"><div><h6>Posted on</h6><p>2019-04-06</p></div></div><div class="level-item is-narrow"><div><h6>Updated on</h6><p>2020-07-01</p></div></div><div class="level-item is-narrow"><div><h6>Licensed under</h6><p><a class="icon" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a><a class="icon" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a><a class="icon" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><div class="recommend-area"><div class="recommend-post"><span class="is-size-6 has-text-grey has-mr-7"># Related Posts</span><br><span>  1.<a class="is-size-6" href="/2022/02/21/iamback/" target="_blank" rel="noreferrer">I am back</a><br></span><span>  2.<a class="is-size-6" href="/2021/02/10/kernel_pwn(fg_kaslr)/" target="_blank" rel="noreferrer">Kernel_pwn FG_KASLR in ROP</a><br></span><span>  3.<a class="is-size-6" href="/2021/01/14/kernel_pwn(userfaultfd)/" target="_blank" rel="noreferrer">kernel_pwn userfaultfd</a><br></span><span>  4.<a class="is-size-6" href="/2021/01/06/libfuzzer3/" target="_blank" rel="noreferrer">（转）LibFuzzer workshop学习之路（三）</a><br></span><span>  5.<a class="is-size-6" href="/2020/12/22/libfuzzer(2)/" target="_blank" rel="noreferrer">（转）LibFuzzer workshop学习之路（二）</a><br></span><span>  6.<a class="is-size-6" href="/2020/12/17/LibFuzzer(1)/" target="_blank" rel="noreferrer">（转）LibFuzzer workshop学习之路（一）</a><br></span><span>  7.<a class="is-size-6" href="/2020/11/20/kernel_pwn%20%E4%BB%8E%E4%BB%BB%E6%84%8F%E5%9C%B0%E5%9D%80%E7%8B%AC%E5%86%99%E5%88%B0%E6%8F%90%E6%9D%83(1)/" target="_blank" rel="noreferrer">kernel_pwn SringsIPC(P1)</a><br></span><span>  8.<a class="is-size-6" href="/2020/11/09/kernel_pwn(3)/" target="_blank" rel="noreferrer">kernel_pwn UAF</a><br></span></div></div><!--!--></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/2020/07/01/uclibc%E4%B8%8B%E7%9A%84%E5%A0%86%E6%BA%A2%E5%87%BA/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">arm构架uclibc下的堆溢出初识</span></a></div></nav><!--!--></div><div class="column column-left is-4-tablet is-4-desktop is-3-widescreen  order-1 is-sticky"><!--!--><div class="column-right-shadow is-hidden-widescreen"></div></div></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/me.jpg" alt="An9Ela" height="28"></a><p class="size-small"><span>&copy; 2022 An9Ela</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noreferrer">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noreferrer">Icarus</a> &amp; <a href="https://github.com/LittleYe233/hexo-theme-amazingremake" target="_blank" rel="noreferrer">Amazing-Remake</a> <br><span>© 版权说明：[本网站所有内容均收集于互联网或自己创作,<br />&nbsp;&nbsp;&nbsp;&nbsp;方便于网友与自己学习交流，如有侵权，请<a href="/message" target="_blank">留言</a>，立即处理]<br /></span><div class="size-small"><span>❤️Thx <strong><span id="busuanzi_value_site_uv">99+</span></strong> users <strong><span id="busuanzi_value_site_pv">99+</span></strong> visited!❤️</span></div></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/LittleYe233/hexo-theme-amazingremake"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdnjs.loli.net/ajax/libs/moment.js/2.22.2/moment-with-locales.min.js"></script><script src="https://cdnjs.loli.net/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" async></script><script>moment.locale("default");</script><script>var IcarusThemeSettings = {
-            article: {
-                highlight: {
-                    enabled: true,
-                    clipboard: true,
-                    fold: 'unfolded'
-                }
-            }
-        };</script><script src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="Retour au sommet" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdnjs.loli.net/ajax/libs/lightgallery/1.10.0/js/lightgallery.min.js" defer></script><script src="https://cdnjs.loli.net/ajax/libs/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
-            if (typeof $.fn.lightGallery === 'function') {
-                $('.article').lightGallery({ selector: '.gallery-item' });
-            }
-            if (typeof $.fn.justifiedGallery === 'function') {
-                if ($('.justified-gallery > p > .gallery-item').length) {
-                    $('.justified-gallery > p > .gallery-item').unwrap();
-                }
-                $('.justified-gallery').justifiedGallery();
-            }
-        });</script><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="Type something..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
-            loadInsight({"contentUrl":"/content.json"}, {"hint":"Type something...","untitled":"(Sans titre)","posts":"Articles","pages":"Pages","categories":"Catégories","tags":"Tags"});
-        });</script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.js"></script><script type="text/javascript">var pjax = new Pjax({
-            elements: "a",//代表点击链接就更新
-            selectors: [  //代表要更新的节点
-                ".section",
-                "title"
-            ],
-            cache: true,
-            cacheBust:false
-        })
-
-        function loadBusuanzi(){
-        $.getScript("//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js", function () {});
-        }
-
-        function loadMathJax() { // 加载mathjax
-            window.MathJax = {
-                tex: {
-                    inlineMath: [['$', '$']],
-                    autoload: {
-                        color: [],
-                        colorv2: ['color']
-                    },
-                    packages: {'[+]': ['noerrors']}
-                },
-                options: {
-                    ignoreHtmlClass: 'tex2jax_ignore',
-                    processHtmlClass: 'tex2jax_process'
-                },
-                loader: {
-                    load: ['input/asciimath', '[tex]/noerrors']
-                }
-            };
-            $.getScript('//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js');
-        };
-
-        // 开始 PJAX 执行的函数
-        document.addEventListener('pjax:send', function () {
-        });
-        
-        // PJAX 完成之后执行的函数，可以和上面的重载放在一起
-        document.addEventListener('pjax:complete', function () {
-            $(".section").css({opacity:1});
-            if(false){
-                $.getScript('/js/comment-issue-data.js',function(){loadIssueData('','','','',false);});
-            }
-            if('undefined' === 'mathjax'){
-                loadMathJax();
-            }
-            loadMainJs(jQuery, window.moment, window.ClipboardJS, window.IcarusThemeSettings);
-            loadBackTop();
-            loadBusuanzi();
-            if(typeof loadBanner == 'function'){
-                loadBanner();
-            }
-        });</script></body></html>
+block content
+    - var tocContent = toc(page.content, {list_number: false})
+    main.container.is-max-widescreen.content.section.post-page.pt-4.px-4
+        .columns.is-flex-desktop.is-justify-content-center.is-flex-direction-row-reverse
+            .column.is-3.is-hidden-mobile(class= tocContent.length < 1 && 'is-hidden')!= tocContent
+            .column.is-9
+                header.my-4
+                    if page.tags && page.tags.length > 0
+                        each tag in page.tags.toArray()
+                            a(href= url_for(`/tags/${tag.name}`))
+                                i.tag.post-item-tag= tag.name
+                h1.mt-0.mb-1.is-family-serif#postTitle= page.title
+                if page.date
+                    time.has-text-grey(datetime=page.date.toJSON())= date(page.date, date_format)
+                article.mt-2.post-content!= page.content
+                section.jump-container.is-flex.is-justify-content-space-between.my-6
+                    // em is empty placeholder
+                    if page.prev
+                        - var preContent= `${ __('prev') }: ${ page.prev.title }`
+                        a.button.is-default(href= url_for(page.prev.path) title= page.prev.title)
+                            i.iconfont.icon-prev.mr-2.has-text-grey
+                            span.has-text-weight-semibold= preContent
+                    else
+                        em
+                    if page.next
+                        - var nextContent= `${ __('next') }: ${ page.next.title }`
+                        a.button.is-default(href= url_for(page.next.path) title= page.next.title)
+                            span.has-text-weight-semibold= nextContent
+                            i.iconfont.icon-next.ml-2.has-text-grey
+                if theme.comment_utteranc && theme.comment_utteranc.enable
+                    article.mt-6.comment-container
+                        script(
+                            async
+                            repo= theme.comment_utteranc.repo
+                            src= "https://utteranc.es/client.js"
+                            label= theme.comment_utteranc.label
+                            issue-term= theme.comment_utteranc.issue_term || "pathname"
+                            theme= theme.comment_utteranc.theme || "preferred-color-scheme"
+                        )
+                if theme.comment_valine && theme.comment_valine.enable
+                    article.mt-6.comment-container#vcomments(
+                        data-comment_valine_id= theme.comment_valine.appId
+                        data-comment_valine_key= theme.comment_valine.appKey
+                    )
+                if theme.comment_disqus && theme.comment_disqus.enable
+                    div#disqus_thread
+                    article.mt-6.comment-container#disqus
+                        script="var disqus_config = function () {this.page.url = '"+theme.comment_disqus.url+url_for(page.path)+"';this.page.identifier = '"+theme.comment_disqus.name+"';};"
+                        script="(function() {var d = document, s = d.createElement('script');s.src = 'https://"+theme.comment_disqus.name+".disqus.com/embed.js';s.setAttribute('data-timestamp', +new Date());(d.head || d.body).appendChild(s);})();"
+                        script(id="dsq-count-scr", src="//blog-pubgj2togw.disqus.com/count.js", async)
+block script
+    script(src= url_for("/js/post.js"))
