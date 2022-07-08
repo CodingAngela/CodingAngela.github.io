@@ -1,12 +1,269 @@
-<!DOCTYPE html><html class="appearance-auto"><head><meta charset="UTF-8"><title>DEFCON2018_Quals_mario</title><meta name="description" content="May the Force be with you"><meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, initial-scale=1"><!-- Google Analytics --><!-- End Google Analytics -->
-<!-- Baidu Analytics --><!-- End Baidu Analytics --><link rel="icon" href="/images/favicon.png"><link rel="stylesheet" href="/style/common/bulma.css"><link rel="stylesheet" href="/style/base.css"><link rel="stylesheet" href="/style/common/helper.css"><script src="/js/common.js"></script><link rel="stylesheet" href="/style/post.css"><link rel="stylesheet" href="/style/themes/highlight-theme-light.css"><script src="/js/highlight.pack.js"></script><meta name="description" content="DEFCON2018 mario
-一次勇敢的尝试👼 领教了defcon的难度，总结了一点难题的规律：1.代码量大2.数据复杂3.漏洞隐蔽4.利用困难5.C和C+混合,且用vector导致堆很琐碎
+
+
+<!DOCTYPE html>
+<html lang="">
+<head>
+  
+
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFCON2018_Quals_mario [ An9Ela ]</title>
+
+  <link rel="icon" href="/img/favicon.ico">
+
+
+    <meta name="author" content="An9Ela">
 
 
 
-我全程跟着hxp的脚本边调边做但也只是懂了大概80%，明白了漏洞所在，明白了leak的方法，但最后的拿shell很😵，hxp说是利用win_heap(指向one_gadget的heap)覆盖输出pizza objectd的函数vtable，再通过admire函数实现执行，可能还是我结构体或者vector分析的有问题吧😥
-我先分析一下漏洞所在：
-12345printf(&amp;quot;Before I start cooking your pizzas, do you have anything to dec.."><meta name="generator" content="Hexo 6.2.0"></head><body class="is-flex is-flex-direction-column"><header class="header-widget is-flex-shrink-0 is-hidden-mobile"><div class="container is-fullhd is-flex is-justify-content-space-between is-align-items-center is-full-height"><section class="is-hidden-mobile is-flex-shrink-0"><h2><a href="/">Haojen's blog</a></h2></section><h3 class="is-hidden-mobile is-family-serif is-full-height is-flex is-align-items-center is-flex-shrink-0"><div class="is-full-height" id="postTopic"><p class="is-full-height is-flex-shrink-0 is-flex is-align-items-center is-justify-content-center">DEFCON2018_Quals_mario</p><p class="is-full-height is-flex-shrink-0 is-flex is-align-items-center is-justify-content-center">Click back to the top</p></div></h3><aside class="is-flex-shrink-0"><h3 class="is-inline-block"><a href="/">Home</a></h3><h3 class="is-inline-block"><a href="/about">About</a></h3><h3 class="is-inline-block"><a href="/archives">Archives</a></h3></aside></div></header><header class="is-flex header-widget is-flex-shrink-0 is-align-items-center is-justify-content-center is-hidden-tablet"><h3 class="is-inline-block"><a href="/">Home</a></h3><h3 class="is-inline-block"><a href="/about">About</a></h3><h3 class="is-inline-block"><a href="/archives">Archives</a></h3></header><main><main class="container is-max-widescreen content section post-page pt-4 px-4"><div class="columns is-flex-desktop is-justify-content-center is-flex-direction-row-reverse"><div class="column is-3 is-hidden-mobile"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#DEFCON2018-mario"><span class="toc-text">DEFCON2018 mario</span></a></li></ol></div><div class="column is-9"><header class="my-4"><a href="/tags/CTF"><i class="tag post-item-tag">CTF</i></a><a href="/tags/PWN"><i class="tag post-item-tag">PWN</i></a></header><h1 class="mt-0 mb-1 is-family-serif" id="postTitle">DEFCON2018_Quals_mario</h1><time class="has-text-grey" datetime="2020-10-12T10:11:11.000Z">2020-10-12</time><article class="mt-2 post-content"><h3 id="DEFCON2018-mario"><a href="#DEFCON2018-mario" class="headerlink" title="DEFCON2018 mario"></a>DEFCON2018 mario</h3><blockquote>
+
+
+  <link rel="alternate" href="/atom.xml " title="An9Ela" type="application/atom+xml">
+
+
+  
+    <link rel="stylesheet" href="/css/main.css">
+  
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+  <body data-theme="light" class="notransition">
+    <script>
+      const body = document.body;
+      const data = body.getAttribute("data-theme");
+      const initTheme = (state) => {
+        if (state === "dark") {
+          body.setAttribute("data-theme", "dark");
+        } else if (state === "light") {
+          body.removeAttribute("data-theme");
+        } else {
+          localStorage.setItem("theme", data);
+        }
+      };
+   
+      initTheme(localStorage.getItem("theme"));
+      
+      setTimeout(() => body.classList.remove("notransition"), 75);
+    </script>
+  <div class="navbar" role="navigation">
+    <nav class="menu">
+      <input type="checkbox" id="menu-trigger" class="menu-trigger" />
+      <label for="menu-trigger">
+        <span class="menu-icon">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 512 512"
+          >
+            <path
+              d="M64,384H448V341.33H64Zm0-106.67H448V234.67H64ZM64,128v42.67H448V128Z"
+            />
+          </svg>
+        </span>
+      </label>
+      <a id="mode">
+        <svg
+          class="mode-sunny"
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 512 512"
+        >
+          <title>LIGHT</title>
+          <line
+            x1="256"
+            y1="48"
+            x2="256"
+            y2="96"
+            style="stroke-linecap:round;stroke-miterlimit:10;stroke-width:32px"
+          />
+          <line
+            x1="256"
+            y1="416"
+            x2="256"
+            y2="464"
+            style="stroke-linecap:round;stroke-miterlimit:10;stroke-width:32px"
+          />
+          <line
+            x1="403.08"
+            y1="108.92"
+            x2="369.14"
+            y2="142.86"
+            style="stroke-linecap:round;stroke-miterlimit:10;stroke-width:32px"
+          />
+          <line
+            x1="142.86"
+            y1="369.14"
+            x2="108.92"
+            y2="403.08"
+            style="stroke-linecap:round;stroke-miterlimit:10;stroke-width:32px"
+          />
+          <line
+            x1="464"
+            y1="256"
+            x2="416"
+            y2="256"
+            style="stroke-linecap:round;stroke-miterlimit:10;stroke-width:32px"
+          />
+          <line
+            x1="96"
+            y1="256"
+            x2="48"
+            y2="256"
+            style="stroke-linecap:round;stroke-miterlimit:10;stroke-width:32px"
+          />
+          <line
+            x1="403.08"
+            y1="403.08"
+            x2="369.14"
+            y2="369.14"
+            style="stroke-linecap:round;stroke-miterlimit:10;stroke-width:32px"
+          />
+          <line
+            x1="142.86"
+            y1="142.86"
+            x2="108.92"
+            y2="108.92"
+            style="stroke-linecap:round;stroke-miterlimit:10;stroke-width:32px"
+          />
+          <circle
+            cx="256"
+            cy="256"
+            r="80"
+            style="stroke-linecap:round;stroke-miterlimit:10;stroke-width:32px"
+          />
+        </svg>
+        <svg
+          class="mode-moon"
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 512 512"
+        >
+          <title>DARK</title>
+          <line
+            x1="256"
+            y1="48"
+            x2="256"
+            y2="96"
+            style="stroke-linecap:round;stroke-miterlimit:10;stroke-width:32px"
+          />
+          <line
+            x1="256"
+            y1="416"
+            x2="256"
+            y2="464"
+            style="stroke-linecap:round;stroke-miterlimit:10;stroke-width:32px"
+          />
+          <line
+            x1="403.08"
+            y1="108.92"
+            x2="369.14"
+            y2="142.86"
+            style="stroke-linecap:round;stroke-miterlimit:10;stroke-width:32px"
+          />
+          <line
+            x1="142.86"
+            y1="369.14"
+            x2="108.92"
+            y2="403.08"
+            style="stroke-linecap:round;stroke-miterlimit:10;stroke-width:32px"
+          />
+          <line
+            x1="464"
+            y1="256"
+            x2="416"
+            y2="256"
+            style="stroke-linecap:round;stroke-miterlimit:10;stroke-width:32px"
+          />
+          <line
+            x1="96"
+            y1="256"
+            x2="48"
+            y2="256"
+            style="stroke-linecap:round;stroke-miterlimit:10;stroke-width:32px"
+          />
+          <line
+            x1="403.08"
+            y1="403.08"
+            x2="369.14"
+            y2="369.14"
+            style="stroke-linecap:round;stroke-miterlimit:10;stroke-width:32px"
+          />
+          <line
+            x1="142.86"
+            y1="142.86"
+            x2="108.92"
+            y2="108.92"
+            style="stroke-linecap:round;stroke-miterlimit:10;stroke-width:32px"
+          />
+          <circle
+            cx="256"
+            cy="256"
+            r="80"
+            style="stroke-linecap:round;stroke-miterlimit:10;stroke-width:32px"
+          />
+        </svg>
+      </a>
+      <div class="trigger">
+        <div class="trigger-container">
+          
+            
+            
+            
+            
+            
+            
+            <a class="menu-link " href="/"> Home</a>
+          
+            
+            
+            
+            
+            
+            
+            <a class="menu-link " href="/about/"> About</a>
+          
+            
+            
+            
+            
+            
+            
+            <a class="menu-link " href="/archives/"> Archives</a>
+          
+            
+            
+            
+            
+            
+            
+            <a class="menu-link " href="/tags/"> Tags</a>
+          
+        </div>
+      </div>
+    </nav>
+  </div>
+  
+<div class="wrapper post">
+  <main class="page-content" aria-label="Content">
+      <header class="header">
+        
+          <div class="tags">
+            <a href="/tags/CTF/" class="tag"># CTF</a><a href="/tags/PWN/" class="tag"># PWN</a>
+          </div>
+        
+        <h1 class="header-title" itemprop="headline">DEFCON2018_Quals_mario</h1>
+          <div class="post-meta">
+            <time>Oct 12, 2020</time>
+            <span itemprop="author">
+              <span itemprop="name">An9Ela</span>
+            </span>
+          </div>
+        </header>
+
+          <div class="page-content"><h3 id="DEFCON2018-mario"><a href="#DEFCON2018-mario" class="headerlink" title="DEFCON2018 mario"></a>DEFCON2018 mario</h3><blockquote>
 <p>一次勇敢的尝试👼 领教了defcon的难度，总结了一点难题的规律：<br>1.代码量大<br>2.数据复杂<br>3.漏洞隐蔽<br>4.利用困难<br>5.C和C+混合,且用vector导致堆很琐碎</p>
 </blockquote>
 <span id="more"></span>
@@ -23,4 +280,50 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"> RAX  0x55aea44fbcac ◂— push   rbp</span><br><span class="line"> RBX  0x0</span><br><span class="line"> RCX  0x7ffd8bcbffa0 ◂— 0x0</span><br><span class="line"> RDX  0x55aea59401d0 —▸ 0x55aea4705c00 —▸ 0x55aea44fbcac ◂— push   rbp</span><br><span class="line"> RDI  0x55aea59401d0 —▸ 0x55aea4705c00 —▸ 0x55aea44fbcac ◂— push   rbp</span><br><span class="line"> RSI  0x7ffd8bcbffa0 ◂— 0x0</span><br><span class="line"> R8   0x7f3d93746740 ◂— 0x7f3d93746740</span><br><span class="line"> R9   0x2020202020202020 (&#x27;        &#x27;)</span><br><span class="line"> R10  0x0</span><br><span class="line"> R11  0x246</span><br><span class="line"> R12  0x55aea44fb5f0 ◂— xor    ebp, ebp</span><br><span class="line"> R13  0x7ffd8bcc19f0 ◂— 0x1</span><br><span class="line"> R14  0x0</span><br><span class="line"> R15  0x0</span><br><span class="line"> RBP  0x7ffd8bcc18b0 —▸ 0x7ffd8bcc18d0 —▸ 0x7ffd8bcc18f0 —▸ 0x7ffd8bcc1910 —▸ 0x55aea45012f0 ◂— ...</span><br><span class="line"> RSP  0x7ffd8bcbff70 ◂— 0x0</span><br><span class="line"> RIP  0x55aea44fd039 ◂— call   rax</span><br><span class="line">────────────────────────────────────────[ DISASM ]─────────────────────────────────────────</span><br><span class="line">   0x55aea44fd022    mov    rax, qword ptr [rax]</span><br><span class="line">   0x55aea44fd025    lea    rcx, [rbp - 0x1910]</span><br><span class="line">   0x55aea44fd02c    mov    rdx, qword ptr [rbp - 0x1918]</span><br><span class="line">   0x55aea44fd033    mov    rsi, rcx</span><br><span class="line">   0x55aea44fd036    mov    rdi, rdx</span><br><span class="line"> ► 0x55aea44fd039    call   rax</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">pwndbg&gt; telescope 0x55aea5940130 40</span><br><span class="line">00:0000│          0x55aea5940130 —▸ 0x7f3d92c2327a (do_system+1098) ◂— mov    rax, qword ptr [rip + 0x37ec37]</span><br><span class="line">... ↓</span><br><span class="line">02:0010│          0x55aea5940140 ◂— &#x27;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX&#x27;</span><br><span class="line">... ↓</span><br><span class="line">14:00a0│ rdx rdi  0x55aea59401d0 —▸ 0x55aea4705c00 —▸ 0x55aea44fbcac ◂— push   rbp</span><br><span class="line">15:00a8│          0x55aea59401d8 —▸ 0x55aea5940210 ◂— 0x7f00858d9ff0</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <p>可以看到，拿shell的关键是在heap_overflow的时候改掉位于0x55aea59401d0 —▸ 0x55aea4705c00 —▸ 0x55aea44fbcac ◂— push   rbp的vtabl（改成win_heap_addr，0x55aea44fbcac本来是要打印pizza_object的）从而在call rax时候实现get shell!!!</p>
 <p>基本明白这题的思路了，最后拿shell的漏洞明显专门设计的，略显生硬🚩</p>
-</article><section class="jump-container is-flex is-justify-content-space-between my-6"><!-- em is empty placeholder--><a class="button is-default" href="/2020/10/14/Pwnable_dubblesort/" title="Pwnable.tw dubblesort"><i class="iconfont icon-prev mr-2 has-text-grey"></i><span class="has-text-weight-semibold">Previous: Pwnable.tw dubblesort</span></a><a class="button is-default" href="/2020/09/26/%E5%9B%BD%E8%B5%9B_final%E6%88%98%E8%AE%B0/" title="国赛_final"><span class="has-text-weight-semibold">Next: 国赛_final</span><i class="iconfont icon-next ml-2 has-text-grey"></i></a></section><article class="mt-6 comment-container"><script async repo="Haojen/Claudia-theme-blog" src="https://utteranc.es/client.js" issue-term="pathname" theme="preferred-color-scheme"></script></article></div></div></main></main><footer class="is-flex is-flex-direction-column is-align-items-center is-flex-shrink-0 is-family-serif"><section class="sns-container"><a title="twitter" target="_blank" rel="noopener nofollow" href="//twitter.com//"><i class="iconfont icon-twitter"></i></a><!-- Github--><a title="github" target="_blank" rel="noopener nofollow" href="//github.com/haojen"><i class="iconfont icon-github"></i></a><!-- Ins--><a title="instagram" target="_blank" rel="noopener nofollow" href="//www.instagram.com//"><i class="iconfont icon-ins"></i></a><!-- RSS--><!-- 知乎--><!-- 领英--><!-- 脸书--><a title="facebook" target="_blank" rel="noopener nofollow" href="//www.facebook.com//"><i class="iconfont icon-tian7_facebook"></i></a></section><p><span>Copyright ©</span><span> Haojen 2022</span></p><div class="is-flex is-justify-content-center is-flex-wrap-wrap"><p>Powered by Hexo &verbar;&nbsp;</p><p class="is-flex is-justify-content-center"><a title="Hexo theme author" href="//github.com/haojen">Theme by Haojen&nbsp;</a></p><div style="margin-top: 2px"><a class="github-button" title="github-button" href="https://github.com/haojen/hexo-theme-Claudia" data-color-scheme="no-preference: light; light: light; dark: dark;" data-show-count="true"></a></div></div><div><span></span></div></footer><script async defer src="https://buttons.github.io/buttons.js"></script><script src="/js/post.js"></script></body></html>
+</div>
+          <nav class="post-nav">
+    
+    <a class="post-nav-item post-nav-prev" href="/2020/10/14/Pwnable_dubblesort/">
+      <div class="nav-arrow">&lt;&nbsp;NEWER</div>
+      <span class="post-title">Pwnable.tw dubblesort</span>
+    </a>
+    
+    
+    <a class="post-nav-item post-nav-next" href="/2020/09/26/%E5%9B%BD%E8%B5%9B_final%E6%88%98%E8%AE%B0/">
+      <div class="nav-arrow">OLDER&nbsp;&gt;</div>
+      <span class="post-title">国赛_final</span>
+    </a>
+    
+  </nav>
+
+   </main>
+</div>
+
+  <footer class="footer">
+    <small class="footer_copyright">
+      <div id="bottom-inner">
+        © 2021 Site by An9Ela using
+        <a target="_blank" rel="noopener" href="http://hexo.io">hexo blog framework</a>.
+        <br>
+        <p> Theme is <a href="https://github.com/dewjohn/hexo-theme-klise">Klise</a></p>
+      </div>
+    </small>
+  </footer>
+  
+  
+
+    
+      <script src="/js/main.js"></script>
+    
+  
+  <script>
+    window.FPConfig = {
+      delay: 0,
+      ignoreKeywords: [],
+      maxRPS: 3,
+      hoverDelay: 50,
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js"></script>
+</body>
+</html>
