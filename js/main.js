@@ -1,5 +1,7 @@
+/* eslint-disable new-cap */
+/* eslint-disable no-undef */
 /* eslint-disable node/no-unsupported-features/node-builtins */
-(function($, moment, ClipboardJS, config) {
+function loadMainJs($, moment, ClipboardJS, config) {
     $('.article img:not(".not-gallery-item")').each(function() {
         // wrap images with link and add caption if possible
         if ($(this).parent('a').length === 0) {
@@ -11,13 +13,14 @@
     });
 
     if (typeof $.fn.lightGallery === 'function') {
-        $('.article').lightGallery({ selector: '.gallery-item' });
+        $('.article').lightGallery({selector: '.gallery-item'});
     }
     if (typeof $.fn.justifiedGallery === 'function') {
         if ($('.justified-gallery > p > .gallery-item').length) {
             $('.justified-gallery > p > .gallery-item').unwrap();
         }
-        $('.justified-gallery').justifiedGallery();
+        // 调整gallery图片渲染尺寸
+        $('.justified-gallery').justifiedGallery({rowHeight: 230, margins: 4});
     }
 
     if (typeof moment === 'function') {
@@ -40,6 +43,7 @@
             $('.navbar-main .navbar-menu').removeClass('justify-content-start');
         }
     }
+
     adjustNavbar();
     $(window).resize(adjustNavbar);
 
@@ -57,7 +61,9 @@
     $('figure.highlight table').wrap('<div class="highlight-body">');
     if (typeof config !== 'undefined'
         && typeof config.article !== 'undefined'
-        && typeof config.article.highlight !== 'undefined') {
+        && typeof config.article.highlight !== 'undefined'
+        && typeof config.article.highlight.enabled === 'boolean'
+        && config.article.highlight.enabled === true) {
 
         $('figure.highlight').addClass('hljs');
         $('figure.highlight .code .line span').each(function() {
@@ -98,8 +104,6 @@
 
         if (fold) {
             $('figure.highlight').each(function() {
-                $(this).addClass('foldable'); // add 'foldable' class as long as fold is enabled
-
                 if ($(this).find('figcaption').find('span').length > 0) {
                     const span = $(this).find('figcaption').find('span');
                     if (span[0].innerText.indexOf('>folded') > -1) {
@@ -113,7 +117,7 @@
                 toggleFold(this, fold === 'folded');
             });
 
-            $('figure.highlight figcaption .level-left').click(function() {
+            $('figure.highlight figcaption .fold').click(function() {
                 const $code = $(this).closest('figure.highlight');
                 toggleFold($code.eq(0), !$code.hasClass('folded'));
             });
@@ -136,4 +140,50 @@
         $mask.on('click', toggleToc);
         $('.navbar-main .catalogue').on('click', toggleToc);
     }
-}(jQuery, window.moment, window.ClipboardJS, window.IcarusThemeSettings));
+}
+
+// eslint-disable-next-line no-unused-vars
+function loadMathJax() { // 加载mathjax
+    window.MathJax = {
+        tex: {
+            inlineMath: [['$', '$']],
+            autoload: {
+                color: [],
+                colorv2: ['color']
+            },
+            packages: {'[+]': ['noerrors']}
+        },
+        options: {
+            ignoreHtmlClass: 'tex2jax_ignore',
+            processHtmlClass: 'tex2jax_process'
+        },
+        loader: {
+            load: ['input/asciimath', '[tex]/noerrors']
+        }
+    };
+    $.getScript('//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js');
+}
+
+$(document).ready(() => {
+    loadMainJs(jQuery, window.moment, window.ClipboardJS, window.IcarusThemeSettings);
+
+    /* 添加背景色 */
+    const navbar = $('.is-fixed-top');
+    const navbar1 = $('.justify-content-start');
+    if (navbar.offset().top > 12) {
+        navbar.addClass('navbar-highlight');
+        navbar1.addClass('navbar-highlight');
+    } else {
+        navbar.removeClass('navbar-highlight');
+        navbar1.removeClass('navbar-highlight');
+    }
+    $(window).scroll(() => {
+        if (navbar.offset().top > 12) {
+            navbar.addClass('navbar-highlight');
+            navbar1.addClass('navbar-highlight');
+        } else {
+            navbar.removeClass('navbar-highlight');
+            navbar1.removeClass('navbar-highlight');
+        }
+    });
+});
